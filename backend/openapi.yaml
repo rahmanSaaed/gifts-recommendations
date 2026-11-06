@@ -1,0 +1,109 @@
+openapi: 3.0.0
+info:
+  title: Gifts Recommendations API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5050
+
+paths:
+  /api/gifts:
+    get:
+      summary: Get all gifts
+      responses:
+        "200":
+          description: List of gifts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      type: string
+                    category:
+                      type: string
+                    price:
+                      type: number
+
+  /api/ai-test:
+    get:
+      summary: Test AI connection
+      responses:
+        "200":
+          description: Message from AI
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  model:
+                    type: string
+                  message:
+                    type: string
+                  finishReason:
+                    type: string
+                  usage:
+                    type: object
+
+  /api/ai-followup:
+    get:
+      summary: Two-turn conversation demo (first answer, then budget-friendly follow-up)
+      responses:
+        "200":
+          description: Both AI answers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  first:
+                    type: string
+                  budgetFriendly:
+                    type: string
+
+  /api/gift-genie:
+    post:
+      summary: Get gift suggestions from the Gift Genie (streamed)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userPrompt
+              properties:
+                userPrompt:
+                  type: string
+                  example: my dad loves fishing
+      responses:
+        "200":
+          description: Gift suggestions as Markdown, streamed in chunks
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: AI request failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /api/stream-test:
+    get:
+      summary: Streaming demo with a fixed prompt
+      responses:
+        "200":
+          description: AI text, streamed in chunks
+          content:
+            text/plain:
+              schema:
+                type: string
